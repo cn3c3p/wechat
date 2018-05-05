@@ -1,0 +1,249 @@
+## 数据库设计
+
+### 电影内容 - movie
+
+
+#### 文档说明
+
+| 参数       | 类型 | 必填 | 长度 | 描述             | 示例值 |
+| ---------- | ---- | ---- | ---- | ---------------- | ------ |
+| mv_name    | CHAR | T    | 36   | 电影名字标识　　 |   ＸＸＸ|
+| mv_key     | INT  | T    |      | 价格       　　　　　　|        |
+| url | CHAR | T    | 36    | 目标短链         |        |
+| passward   | CHAR | T    |       |                |         |
+| target_    | CHAR ｜     |       |                  | 
+
+
+#### SQL语句
+
+``` sql
+CREATE TABLE url_shortener
+(
+  ad_app_key CHAR(32) NOT NULL,
+  channel_id INT NOT NULL,
+  ad_uuid CHAR(36) NOT NULL,
+  target_url CHAR(6) NOT NULL,
+  ext text,
+  PRIMARY KEY (ad_uuid)
+);
+```
+
+### 点击日志表 - click_log
+
+
+#### 文档说明
+
+| 参数           | 类型     | 必填 | 长度    | 描述                                              | 示例值                             |
+| -------------- | -------- | ---- | ------- | ------------------------------------------------- | ---------------------------------- |
+| ad_app_key     | CHAR | T    | 32      | 推广应用标识                                      |                                    |
+| channel_id     | INT      | T    |         | 推广渠道ID                                        |                                    |
+| ad_uuid        | CHAR | T    | 36      | 内部创意唯一标识                                  |                                    |
+| aid            | VARCHAR  | F    | 最大16  | 广告计划 id                                       | 如：头条： '93591189583'           |
+| cid            | VARCHAR  | F    | 最大16  | 广告创意 id                                       | 如：头条： '93591189584'           |
+| csite          | VARCHAR  | F    | 最大4   | 广告投放位置                                      | 视情况而定，可参考头条             |
+| ctype          | VARCHAR  | F    | 最大4   | 创意样式                                          | 视情况而定，可参考头条             |
+| mac            | VARCHAR     | F    | 32      | MAC 地址                                          | cbe065ee6d15995fd78e2c1e0c80a1ed   |
+| user_agent     | VARCHAR  | F    | 32 | 客户端上报数据 时 http 的 header 中 的 user_agent |               |
+| idfa           | VARCHAR     | F    | 32      | IOS IDFA 适用 iOS6 及以上                         |                                    |
+| android_id     | VARCHAR | F    | 32      | 用户终端的 AndroidID,md5 加 密                |                    |
+| imei_md5       | VARCHAR     | F    | 32      | 用户终端的 IMEI,15 位数字 md5                     | fff8d82f29f5c87273f2ee391fdf742e   |
+| muid           | VARCHAR  | F    | 最大32   | 当idfa和imei为空时，以此字段为主                  | fff8d82f29f5c87273f2ee391fdf742e   |
+| uuid           | VARCHAR     | F    | 36      | 用户终端的 UUID                                   |                                    |
+| open_udid      | VARCHAR  | F    | 40      | Open UDID                                         |                                    |
+| os             | VARCHAR  | F    | 20      | 客户端操作系统的 类型                             | 0–Android； 1–iOS 2– WP； 3-Others |
+| ip             | VARCHAR  | F    | 20      | 媒体投放系统获取 的用户终端的公共 IP 地址         |                                    |
+| log_time       | DATETIME | T    |         | 时间                                              |                                    |
+| log_date       | DATE     | T    |         | 日期                                              |                                    |
+| callback_url   | text     | F    |         | 激活回调地址                                      |                                    |
+| callback_param | VARCHAR  | F    | 200     | 激活回调参数                                      |                                    |
+| ext            | text     | F    |         | 扩展字段                                          |                                    |
+
+#### SQL语句
+
+``` sql
+CREATE TABLE click_log
+(
+  ad_app_key CHAR(32) NOT NULL,
+  channel_id INT NOT NULL,
+  ad_uuid CHAR(36) NOT NULL,
+  aid VARCHAR(16),
+  cid VARCHAR(16),
+  csite VARCHAR(4),
+  ctype VARCHAR(4),
+  mac VARCHAR(32),
+  user_agent CHAR(32),
+  idfa VARCHAR(32),
+  android_id VARCHAR(32),
+  imei_md5 VARCHAR(32),
+  muid VARCHAR(32),
+  uuid VARCHAR(36),
+  os VARCHAR(20),
+  ip VARCHAR(15),
+  log_time DATETIME NOT NULL,
+  callback_url text,
+  callback_param VARCHAR(200),
+  ext text,
+  open_udid VARCHAR(40),
+  log_date DATE NOT NULL
+);
+```
+
+### 展示日志表- impression_log
+
+#### 文档说明
+
+| 参数       | 类型     | 必填 | 长度    | 描述                                              | 示例值                             |
+| ---------- | -------- | ---- | ------- | ------------------------------------------------- | ---------------------------------- |
+| ad_app_key | CHAR | T    | 32      | 推广应用标识                                      |                                    |
+| channel_id | INT      | T    |         | 推广渠道ID                                        |                                    |
+| ad_uuid    | CHAR | T    | 36      | 内部创意唯一标识                                  |                                    |
+| aid        | VARCHAR  | F    | 最大16  | 广告计划 id                                       | 如：头条： '93591189583'           |
+| cid        | VARCHAR  | F    | 最大16  | 广告创意 id                                       | 如：头条： '93591189584'           |
+| csite      | VARCHAR  | F    | 最大4   | 广告投放位置                                      | 视情况而定，可参考头条             |
+| ctype      | VARCHAR  | F    | 最大4   | 创意样式                                          | 视情况而定，可参考头条             |
+| mac        | VARCHAR     | F    | 32      | MAC 地址                                          | cbe065ee6d15995fd78e2c1e0c80a1ed   |
+| user_agent | VARCHAR  | F    | 32 | 客户端上报数据 时 http 的 header 中 的 user_agent |               |
+| idfa       | VARCHAR     | F    | 32      | IOS IDFA 适用 iOS6 及以上                         |                                    |
+| android_id | VARCHAR     | F    | 32      | 用户终端的 AndroidID,md5加密                      |                                    |
+| imei_md5   | VARCHAR     | F    | 32      | 用户终端的 IMEI,15 位数字 md5                     | fff8d82f29f5c87273f2ee391fdf742e   |
+| muid       | VAVARCHAR   | F    | 最大32  | 当idfa和imei为空时，以此字段为主                  | fff8d82f29f5c87273f2ee391fdf742e   |
+| uuid       | VARCHAR     | F    | 36      | 用户终端的 UUID                                   |                                    |
+| open_udid  | VARCHAR     | F    | 40      | Open UDID                                         |                                    |
+| os         | VARCHAR  | F    | 最大20  | 客户端操作系统的 类型                             | 0–Android； 1–iOS 2– WP； 3-Others |
+| ip         | VARCHAR  | F    | 最大15 | 媒体投放系统获取 的用户终端的公共 IP 地址         |                                    |
+| log_time   | DATETIME | T    |         | 时间                                              |                                    |
+| log_date   | DATE     | T    |         | 日期                                              |                                    |
+| callback   | text     | F    |         | 激活回调                                          |                                    |
+| ext        | text     | F    |         | 扩展字段                                          |                                    |
+
+#### SQL语句
+
+``` sql
+CREATE TABLE impression_log
+(
+  ad_app_key CHAR(32) NOT NULL,
+  channel_id INT NOT NULL,
+  ad_uuid CHAR(36) NOT NULL,
+  aid VARCHAR(16),
+  cid VARCHAR(16),
+  csite VARCHAR(4),
+  ctype VARCHAR(4),
+  mac VARCHAR(32),
+  user_agent CHAR(32),
+  idfa VARCHAR(32),
+  android_id VARCHAR(32),
+  imei_md5 VARCHAR(32),
+  muid VARCHAR(32),
+  uuid VARCHAR(36),
+  os VARCHAR(20),
+  ip VARCHAR(15),
+  log_time DATETIME NOT NULL,
+  callback text,
+  ext text,
+  open_udid VARCHAR(40),
+  log_date DATE NOT NULL
+);
+```
+
+
+
+### 激活日志表 - active-log
+
+#### 文档说明
+
+| 参数       | 类型     | 必填 | 长度    | 描述                                              | 示例值                             |
+| ---------- | -------- | ---- | ------- | ------------------------------------------------- | ---------------------------------- |
+| cp_app_id  | INT      | T    |         | 运营应用标识                                      |                                    |
+| ad_app_key | CHAR | T    | 32      | 推广应用标识                                      |                                    |
+| retail_id  | INT      | T    |         | 联运渠道id，默认为0                               |                                    |
+| channel_id | INT      | T    |         | 推广渠道id（0:标识自然量，非0：非自然量）         |                                    |
+| ad_uuid    | CHAR | T    | 36      | 内部创意唯一标识                                  |                                    |
+| mac        | VARCHAR     | F    | 32      | MAC 地址                                          | cbe065ee6d15995fd78e2c1e0c80a1ed   |
+| user_agent | VARCHAR  | F    | 32 | 客户端上报数据 时 http 的 header 中 的 user_agent |               |
+| idfa       | VARCHAR     | F    | 32      | IOS IDFA 适用 iOS6 及以上                         |                                    |
+| android_id | VARCHAR | F   | 32    | 用户终端的 AndroidID,md5加密 |    |
+| imei       | VARCHAR | F    | 17      | 用户终端的 IMEI,15 位数字                         |    |
+| imei_md5   | VARCHAR     | F    | 32      | 用户终端的 IMEI,15 位数字 md5                     | fff8d82f29f5c87273f2ee391fdf742e   |
+| uuid       | VARCHAR     | F    | 36      | 用户终端的 UUID                                   |                                    |
+| open_udid  | VARCHAR     | F    | 40      | Open UDID                                         |                                    |
+| os         | VARCHAR  | F    | 最大20  | 客户端操作系统的 类型                             | 0–Android； 1–iOS 2– WP； 3-Others |
+| ip         | VARCHAR  | F    | 最大15 | 媒体投放系统获取 的用户终端的公共 IP 地址         |                                    |
+| click_time   | DATETIME | T    |         | 点击时间                                              |                                    |
+| log_time   | DATETIME | T    |         | 时间                                              |                                    |
+| log_date   | DATE     | T    |         | 日期                                              |                                    |
+| ext        | text     | F    |         | 扩展字段                                          |                                    |
+
+#### SQL语句
+
+``` sql
+CREATE TABLE active_log
+(
+  cp_app_id INT NOT NULL,
+  ad_app_key CHAR(32) NOT NULL,  
+  retail_id INT NOT NULL,
+  channel_id INT NOT NULL,
+  ad_uuid CHAR(36) NOT NULL,
+  mac VARCHAR(32),
+  user_agent CHAR(32),
+  idfa VARCHAR(32),
+  android_id VARCHAR(32),
+  imei VARCHAR(17),
+  imei_md5 VARCHAR(32),
+  uuid VARCHAR(36),
+  open_udid VARCHAR(40),
+  os VARCHAR(20),
+  ip VARCHAR(15),
+  ext text,
+  log_date DATE NOT NULL,
+  log_time DATETIME NOT NULL
+);
+```
+### 自定义事件表 - custom_events_log
+
+#### 文档说明
+
+| 参数       | 类型     | 必填 | 最大长度 | 描述                                              | 示例值                             |
+| ---------- | -------- | ---- | -------- | ------------------------------------------------- | ---------------------------------- |
+| cp_app_id  | INT      | T    |          | 运营应用标识                                      |                                    |
+| ad_app_key | CHAR | T    | 32       | 推广应用标识                                     |                                    |
+| retail_id  | INT      | T    |          | 联运渠道id，默认为0                               |                                    |
+| event_id   | INT      | T    |          | 事件类型                                          |                                    |
+| mac        | VARCHAR     | F    | 32       | MAC 地址                                          | cbe065ee6d15995fd78e2c1e0c80a1ed   |
+| user_agent | VARCHAR  | F    | 32 | 客户端上报数据 时 http 的 header 中 的 user_agent |               |
+| idfa       | VARCHAR     | F    | 36       | IOS IDFA 适用 iOS6 及以上                         |                                    |
+| android_id | VARCHAR | F    | 32       | 用户终端的 AndroidID,md5加密                | 9774d56d682e549c                   |
+| imei           | VARCHAR | F    | 17   | 用户终端的 IMEI,15 位数字                     |    |
+| imei_md5 | VARCHAR     | F    | 32     | 用户终端的 IMEI,15 位数字 md5    | fff8d82f29f5c87273f2ee391fdf742e   |
+| uuid       | VARCHAR     | F    | 36       | 用户终端的 UUID                                   |                                    |
+| open_udid  | VARCHAR     | F    | 40       | Open UDID                                         |                                    |
+| os         | VARCHAR  | F    | 最大20   | 客户端操作系统的 类型                             | 0–Android； 1–iOS 2– WP； 3-Others |
+| ip         | VARCHAR  | F    | 最大15 | 媒体投放系统获取 的用户终端的公共 IP 地址         |                                    |
+| log_time   | DATETIME | T    |          | 时间                                              |                                    |
+| log_date   | DATE     | T    |          | 日期                                              |                                    |
+| ext        | text     | F    |          | 扩展字段                                          |                                    |
+
+#### SQL语句
+
+```sql
+CREATE TABLE custom_events_log
+(
+  cp_app_id INT NOT NULL,
+  ad_app_key CHAR(32) NOT NULL,
+  retail_id INT NOT NULL,
+  mac VARCHAR(32),
+  user_agent CHAR(32),
+  idfa VARCHAR(32),
+  android_id VARCHAR(32),
+  imei VARCHAR(17),
+  imei_md5 VARCHAR(32),
+  uuid VARCHAR(36),
+  open_udid VARCHAR(40),
+  os VARCHAR(20),
+  ip VARCHAR(15),
+  ext text,
+  log_date DATE NOT NULL,
+  log_time DATETIME NOT NULL,
+  event_id INT NOT NULL
+);
+```
+

@@ -1,0 +1,17 @@
+## 功能说明文档
+
+##微信机器人　电影电视剧
+
+###功能说明
+*	识别出用户的意图　对输入的电影进行匹配出库内相对于的电影基于回复　
+*	用户累计转入对应数额的红包或者其他方式时返回库内的Ｕｒｌ与密码
+
+###数据库选用　
+* 	mongo 
+
+###函数库使用
+*	itchat
+*	gensim ->word2vec 　生成向量并且直接用词相关来计算
+*	jieba import analyse  分词
+*	collections import Counter 　计数
+*	uvenloop 异步操作

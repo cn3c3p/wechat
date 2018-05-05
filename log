@@ -1,0 +1,13 @@
+下午12:13	Packages installed successfully: Installed packages: 'aiohttp'
+
+下午12:18	Packages installed successfully: Installed packages: 'Sanic'
+
+下午12:20	Packages installed successfully: Installed packages: 'SanicMongo'
+
+下午12:22	Packages installed successfully: Installed packages: 'sanic-mongo'
+
+下午12:23	Packages installed successfully: Installed packages: 'Sanic==0.6.0'
+
+下午12:24	Packages installed successfully: Installed packages: 'requests'
+
+下午12:27	Packages uninstalled successfully: Uninstalled packages: 'SanicMongo'
