@@ -19,31 +19,8 @@ import time
 import gensim
 from jieba import analyse
 
-new_model = gensim.models.Word2Vec.load('news_12g_baidubaike_20g_novel_90g_embedding_64.model')
-
-
-def get_vector(str):
-    # 将传入的文本投入词向量空间
-
-    tfidf = analyse.extract_tags
-    num = 0
-    items = tfidf(str)
-    # 输出抽取出的关键词
-    temp = new_model['好玩'] - new_model['好玩']  # 初始化一个空列表
-
-    for item in items:
-        try:
-                temp = temp + new_model[item]
-                num = num + 1  # 记入总数
-        except:
-            pass
-    return (temp / num)
-
-
-
-
 app = Sanic()
-
+import Levenshtein
 
 mongo_uri = "mongodb://{host}:{port}/{database}".format(
     database='wechat',
@@ -64,14 +41,12 @@ async def post_json(request):
 #生成短链定义　http://0.0.0.0:8080/addmovie?name=123&psd=123&url=123
 @app.route("/addmovie")
 async def post_json(request):
-    matrix = await get_vector(request.args.get('name'))
     data = {
         'name': request.args.get('name'),
         'money': request.args.get('money',0),
         'url': request.args.get('url'),
         'password':request.args.get('psd'),
         'updated_at': time.strftime("%Y-%m-%d %X", time.localtime()),
-        'matrix': matrix
     }
    # print (data['name'])
 
@@ -79,7 +54,6 @@ async def post_json(request):
     #if utf - 8  use text  if js  json
 
     return html(docs)
-
 
 
 #生成短链定义　http://0.0.0.0:8080/session?uid=123&name=123&movie=123
@@ -122,11 +96,14 @@ async def post_json(request):
         print (uesr_data)
         return html(res)
     except:
-        return html('not finds')
+        res = ['我没有找到你需要的电影，下列电影是否有您需要的，若是请将其复制发送']
 
+        datas = await app.mongo['test']['movie'].find().to_list(10000)
 
-
-
+        for data in datas:
+            if Levenshtein.distance(data['name'],session_data['name']) < 4 :
+                res.append(data['name'])
+        return (html(res))
 
 
 @app.exception(NotFound)

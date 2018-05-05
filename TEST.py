@@ -2,5 +2,5 @@
 
 import requests
 
-r = requests.get(url="http://www.ygdy8.net/html/gndy/china/list_4_2.html")
+r = requests.get(url="http://0.0.0.0:8080/session?uid=123&name=123&movie=maomaom")
 print (r.text)
